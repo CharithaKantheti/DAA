@@ -1,0 +1,49 @@
+#include <stdio.h>
+#define MAX 10  
+
+int main() {
+    int n;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter elements: ");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    int max = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > max)
+            max = arr[i];
+    }
+    int bucket[MAX][n];
+    int count[MAX];
+    for (int i = 0; i < MAX; i++)
+        count[i] = 0;
+    for (int i = 0; i < n; i++) {
+        int bi = (arr[i] * MAX) / (max + 1);
+        bucket[bi][count[bi]++] = arr[i];
+    }
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 1; j < count[i]; j++) {
+            int key = bucket[i][j];
+            int k = j - 1;
+            while (k >= 0 && bucket[i][k] > key) {
+                bucket[i][k + 1] = bucket[i][k];
+                k--;
+            }
+            bucket[i][k + 1] = key;
+        }
+    }
+    int index = 0;
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 0; j < count[i]; j++) {
+            arr[index++] = bucket[i][j];
+        }
+    }
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+    return 0;
+}
