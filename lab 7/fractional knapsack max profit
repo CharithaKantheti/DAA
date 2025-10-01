@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int main() {
+    int n, capacity, i, j;
+
+    printf("Enter number of items and capacity: ");
+    scanf("%d %d", &n, &capacity);
+
+    int profit[n], weight[n];
+
+    for (i = 0; i < n; i++) {
+        printf("Enter profit and weight for item %d: ", i + 1);
+        scanf("%d %d", &profit[i], &weight[i]);
+    }
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (profit[i] < profit[j]) {
+                int t = profit[i]; profit[i] = profit[j]; profit[j] = t;
+                t = weight[i]; weight[i] = weight[j]; weight[j] = t;
+            }
+        }
+    }
+
+    float total = 0.0;
+
+    for (i = 0; i < n && capacity > 0; i++) {
+        if (capacity >= weight[i]) {
+            total += profit[i];
+            capacity -= weight[i];
+        } else {
+            total += profit[i] * ((float)capacity / weight[i]);
+            capacity = 0;
+        }
+    }
+
+    printf("Total profit (by max profit): %.2f\n", total);
+
+    return 0;
+}
