@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int main() {
+    int arr[100], n;
+    int stack[100][2];
+    int top = -1;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    int min = arr[0], max = arr[0];
+    top++;
+    stack[top][0] = 0;
+    stack[top][1] = n - 1;
+
+    while (top >= 0) {
+        int low = stack[top][0];
+        int high = stack[top][1];
+        top--;
+
+        if (low == high) {
+            if (arr[low] < min) min = arr[low];
+            if (arr[low] > max) max = arr[low];
+        } else if (high == low + 1) {
+            if (arr[low] < arr[high]) {
+                if (arr[low] < min) min = arr[low];
+                if (arr[high] > max) max = arr[high];
+            } else {
+                if (arr[high] < min) min = arr[high];
+                if (arr[low] > max) max = arr[low];
+            }
+        } else {
+            int mid = (low + high) / 2;
+            top++;
+            stack[top][0] = low;
+            stack[top][1] = mid;
+            top++;
+            stack[top][0] = mid + 1;
+            stack[top][1] = high;
+        }
+    }
+
+    printf("Minimum element: %d\n", min);
+    printf("Maximum element: %d\n", max);
+
+    return 0;
+}
