@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+int main() {
+    int n, i, j;
+    char data[100];
+    int freq[100];
+
+    printf("Enter number of characters: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter character %d: ", i + 1);
+        scanf(" %c", &data[i]);
+        printf("Enter frequency for %c: ", data[i]);
+        scanf("%d", &freq[i]);
+    }
+
+    int total = 2 * n - 1;
+    int parent[200], left[200], right[200], weight[200];
+
+    for (i = 0; i < n; i++) {
+        weight[i] = freq[i];
+        parent[i] = -1;
+        left[i] = right[i] = -1;
+    }
+
+    for (i = n; i < total; i++) {
+        int min1 = 1000000, min2 = 1000000, x1 = -1, x2 = -1;
+
+        for (j = 0; j < i; j++) {
+            if (parent[j] == -1) {
+                if (weight[j] < min1) {
+                    min2 = min1;
+                    x2 = x1;
+                    min1 = weight[j];
+                    x1 = j;
+                } else if (weight[j] < min2) {
+                    min2 = weight[j];
+                    x2 = j;
+                }
+            }
+        }
+
+        weight[i] = weight[x1] + weight[x2];
+        left[i] = x1;
+        right[i] = x2;
+        parent[x1] = parent[x2] = i;
+        parent[i] = -1;
+    }
+
+    printf("\nHuffman Codes:\n");
+    for (i = 0; i < n; i++) {
+        int code[20], top = 0, cur = i, p = parent[i];
+        while (p != -1) {
+            code[top++] = (left[p] == cur) ? 0 : 1;
+            cur = p;
+            p = parent[cur];
+        }
+
+        printf("%c: ", data[i]);
+        for (j = top - 1; j >= 0; j--)
+            printf("%d", code[j]);
+        printf("\n");
+    }
+
+    return 0;
+}
